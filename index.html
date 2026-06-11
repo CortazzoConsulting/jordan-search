@@ -3,8 +3,17 @@
 <title>Jordan Moran — Search Command</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--ink:#16202B;--ink2:#26323F;--paper:#FBFAF7;--card:#FFFFFF;--line:#E7E3DA;--grey:#69727D;--gold:#C8881E;--teal:#1F6F6B;--blue:#3B6CA8;--plum:#7A4E7E;--red:#B4452F;--green:#2F8F5B;--shadow:0 1px 2px rgba(22,32,43,.06),0 6px 20px rgba(22,32,43,.06);--disp:"Fraunces",Georgia,serif;--ui:"Inter",system-ui,-apple-system,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,monospace}
+.login-overlay{position:fixed;inset:0;background:var(--paper);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.login-card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:30px 28px;width:100%;max-width:380px}
+.login-brand{font-family:var(--disp);font-weight:600;color:var(--gold);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.login-card h2{font-family:var(--disp);font-weight:600;font-size:24px;margin:0 0 6px}
+.login-sub{font-size:13px;color:var(--grey);margin:0 0 18px}
+.login-card input{width:100%;font-family:var(--ui);font-size:14px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;background:#fff;color:var(--ink)}
+.login-btn{width:100%;padding:12px;font-size:14px;margin-top:4px}
+.login-err{color:var(--red);font-size:12.5px;margin-top:10px;min-height:16px}
 *{box-sizing:border-box}html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:var(--teal)}button{font-family:var(--ui);cursor:pointer}
@@ -363,11 +372,34 @@ h1{font-family:var(--disp);font-weight:600;font-size:30px;line-height:1.05;margi
   <div class="foot">
     <button class="reset" id="reset">Reset all progress</button>
     <span class="saved" id="saved">Saved ✓</span>
+    <button class="reset" id="signout" style="display:none">Sign out</button>
     <span>Verified Jun 11, 2026. Comp figures are market estimates. Re-check any posting before relying on it.</span>
   </div>
 </div>
 
+<div id="login" class="login-overlay" style="display:none">
+  <div class="login-card">
+    <div class="login-brand">Search Command</div>
+    <h2>Sign in</h2>
+    <p class="login-sub">Private to Jordan. Your pipeline saves to the cloud and syncs across your devices.</p>
+    <input id="loginEmail" type="email" placeholder="Email" autocomplete="username">
+    <input id="loginPass" type="password" placeholder="Password" autocomplete="current-password">
+    <button id="loginBtn" class="primary login-btn">Sign in</button>
+    <div id="loginErr" class="login-err"></div>
+  </div>
+</div>
+
 <script>
+/* ============================================================
+   SUPABASE CONFIG — paste your two values between the quotes.
+   Find them in Supabase: Project Settings → API.
+   Leave both blank to keep using on-device browser storage.
+   ============================================================ */
+const SUPABASE_URL      = "https://wadodraaafrpbuwvjlus.supabase.co";   // Project URL
+const SUPABASE_ANON_KEY = "sb_publishable_kqQAw6tRA2gCxeRxrQ3zfA_o7iIRM7d";   // publishable key (safe to expose)
+/* ============================================================ */
+let sb=null, USER=null;
+if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase){ sb=window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
 const LANES={"EA/Ops":{c:"var(--teal)",lbl:"EA / Ops"},"Sales":{c:"var(--gold)",lbl:"Sales / AE"},"Multifamily":{c:"var(--blue)",lbl:"Multifamily"},"Design":{c:"var(--plum)",lbl:"Design retail / showroom"},"DesignFirm":{c:"#9C6B33",lbl:"Design firm / coordinator"}};
 const STATUSES=["Not started","Researching","Applied","Screening","Interview","Offer","Closed"];
 const STAGES=["Applied","Screening","Interview","Offer"];
@@ -519,9 +551,18 @@ let saveT;
 function flagSaved(){const s=$('#saved');s.classList.add('show');clearTimeout(window._st);window._st=setTimeout(()=>s.classList.remove('show'),1200);}
 const HAS_CS=!!(window.storage&&window.storage.get);
 const store={
- async get(k){if(HAS_CS)return await window.storage.get(k,false);const v=window.localStorage.getItem(k);return v!=null?{value:v}:null;},
- async set(k,v){if(HAS_CS)return await window.storage.set(k,v,false);window.localStorage.setItem(k,v);return {value:v};},
- async del(k){if(HAS_CS)return await window.storage.delete(k,false);window.localStorage.removeItem(k);return {deleted:true};}
+ async get(k){
+   if(sb&&USER){const{data,error}=await sb.from('app_state').select('data').eq('user_id',USER.id).eq('key',k).maybeSingle();if(error)throw error;return data?{value:data.data}:null;}
+   if(HAS_CS)return await window.storage.get(k,false);
+   const v=window.localStorage.getItem(k);return v!=null?{value:v}:null;},
+ async set(k,v){
+   if(sb&&USER){const{error}=await sb.from('app_state').upsert({user_id:USER.id,key:k,data:v,updated_at:new Date().toISOString()},{onConflict:'user_id,key'});if(error)throw error;return {value:v};}
+   if(HAS_CS)return await window.storage.set(k,v,false);
+   window.localStorage.setItem(k,v);return {value:v};},
+ async del(k){
+   if(sb&&USER){const{error}=await sb.from('app_state').delete().eq('user_id',USER.id).eq('key',k);if(error)throw error;return {deleted:true};}
+   if(HAS_CS)return await window.storage.delete(k,false);
+   window.localStorage.removeItem(k);return {deleted:true};}
 };
 async function save(){clearTimeout(saveT);saveT=setTimeout(async()=>{try{await store.set(KEY,JSON.stringify(S));flagSaved();}catch(e){console.warn('save fail',e);}},250);}
 async function load(){try{const r=await store.get(KEY);if(r&&r.value)S=Object.assign(S,JSON.parse(r.value));}catch(e){}
@@ -750,5 +791,28 @@ function initRender(){
  $('#iChannel').innerHTML=opts(ICHAN,'Email');$('#iStatus').innerHTML=opts(ISTAT,'Requested');
  $('#tmplCat').innerHTML='<option value="">All categories</option>'+TCATS.map(c=>`<option value="${c}">${c}</option>`).join('');
  renderScripture();renderRoles();renderProfile();renderNetwork();renderTemplates();renderBands();renderPlaybook();renderResume();renderStats();}
-(async function(){await load();initRender();})();
+async function startApp(){await load();initRender();
+ if(sb&&USER){const so=$('#signout');if(so)so.style.display='';}}
+function showLogin(msg){$('#login').style.display='flex';if(msg)$('#loginErr').textContent=msg;}
+function hideLogin(){$('#login').style.display='none';$('#loginErr').textContent='';}
+async function doLogin(){
+ const email=$('#loginEmail').value.trim(),pass=$('#loginPass').value;
+ if(!email||!pass){$('#loginErr').textContent='Enter your email and password.';return;}
+ const btn=$('#loginBtn');btn.disabled=true;btn.textContent='Signing in…';$('#loginErr').textContent='';
+ try{const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+   if(error){$('#loginErr').textContent=error.message||'Sign-in failed.';btn.disabled=false;btn.textContent='Sign in';return;}
+   USER=data.user;hideLogin();await startApp();}
+ catch(e){$('#loginErr').textContent='Something went wrong. Try again.';btn.disabled=false;btn.textContent='Sign in';}}
+(async function(){
+ if(sb){
+   try{const{data:{session}}=await sb.auth.getSession();
+     if(session&&session.user){USER=session.user;await startApp();}else{showLogin();}}
+   catch(e){showLogin('Could not reach the database. Check the connection and refresh.');}
+   $('#loginBtn').addEventListener('click',doLogin);
+   $('#loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+   const so=$('#signout');if(so)so.addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
+ } else {
+   await startApp();
+ }
+})();
 </script>
