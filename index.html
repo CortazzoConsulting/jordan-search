@@ -635,7 +635,7 @@ function renderRoles(){
      <div class="chk">${r.ver==='verified'?'✓ ':''}${r.chk}</div><div class="rc">${r.rc}</div>
      <div class="row2"><select data-r="${r.id}" class="st">${STATUSES.map(o=>`<option${o===s.status?' selected':''}>${o}</option>`).join('')}</select>
        <input type="date" class="date" data-rd="${r.id}" value="${s.applied}" title="Date applied" aria-label="Date applied">${apply}</div>${flag}
-     <textarea class="notes" data-rn="${r.id}" placeholder="Notes — contact, follow-up date, interview thoughts…">${s.notes||''}</textarea>`;
+     <textarea class="notes" data-rn="${r.id}" placeholder="Notes — contact, follow-up date, interview thoughts…">${esc(s.notes||'')}</textarea>`;
    box.appendChild(c);});
  $('#count').textContent=`${list.length} of ${ROLES.length} shown`;
  renderDoNow();renderFunnel();renderLanes();renderStats();
