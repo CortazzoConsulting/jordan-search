@@ -1,0 +1,754 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jordan Moran — Search Command</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16202B;--ink2:#26323F;--paper:#FBFAF7;--card:#FFFFFF;--line:#E7E3DA;--grey:#69727D;--gold:#C8881E;--teal:#1F6F6B;--blue:#3B6CA8;--plum:#7A4E7E;--red:#B4452F;--green:#2F8F5B;--shadow:0 1px 2px rgba(22,32,43,.06),0 6px 20px rgba(22,32,43,.06);--disp:"Fraunces",Georgia,serif;--ui:"Inter",system-ui,-apple-system,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,monospace}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--teal)}button{font-family:var(--ui);cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+header{background:var(--ink);color:#fff;border-bottom:3px solid var(--gold)}
+.hd{max-width:1180px;margin:0 auto;padding:22px 20px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.hd .id{flex:1;min-width:240px}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#B9C2CC;font-weight:600}
+h1{font-family:var(--disp);font-weight:600;font-size:30px;line-height:1.05;margin:4px 0 2px;letter-spacing:-.01em}
+.sub{color:#AEB8C2;font-size:13px}
+.kpis{display:flex;gap:10px;flex-wrap:wrap}
+.kpi{background:var(--ink2);border:1px solid #33414f;border-radius:12px;padding:10px 14px;min-width:74px;text-align:center}
+.kpi b{display:block;font-family:var(--mono);font-size:22px;font-weight:600;line-height:1}
+.kpi span{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#9aa6b1}
+.ring{display:flex;align-items:center;gap:12px}
+.ring .lab{font-size:11px;color:#AEB8C2;line-height:1.3}.ring .lab b{display:block;font-family:var(--mono);font-size:18px;color:#fff}
+.statbar{background:var(--ink2);color:#fff}
+.statin{max-width:1180px;margin:0 auto;padding:11px 20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.lvl{display:flex;align-items:center;gap:10px;min-width:230px;flex:1}
+.lvlpill{font-family:var(--mono);font-size:12px;font-weight:700;background:var(--gold);color:#1b1b1b;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.xpwrap{flex:1;min-width:120px}
+.xpbar{height:8px;background:#33414f;border-radius:999px;overflow:hidden}.xpbar i{display:block;height:100%;background:var(--gold);transition:width .5s}
+.xptext{font-size:10.5px;color:#9aa6b1;margin-top:3px}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.bdg{font-size:11px;border-radius:999px;padding:3px 9px;background:#33414f;color:#7e8b97;border:1px solid #3c4956;white-space:nowrap}
+.bdg.on{background:#243a39;color:#bdeae6;border-color:#2c4f4c}
+.runway{font-size:11.5px;color:#AEB8C2;white-space:nowrap}
+.tabs{display:flex;gap:2px;max-width:1180px;margin:0 auto;padding:0 20px;flex-wrap:wrap}
+.tab{background:transparent;border:0;padding:14px 14px;font-weight:600;color:var(--grey);font-size:13px;border-bottom:2px solid transparent}
+.tab[aria-selected=true]{color:var(--ink);border-bottom-color:var(--gold)}
+.panel{display:none;padding-top:20px}.panel.on{display:block}
+.scripture{background:linear-gradient(135deg,#1F6F6B,#155551);color:#fff;border-radius:14px;padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+.scripture .lab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#bfe4e0;font-weight:600}
+.scripture .verse{font-family:var(--disp);font-size:18px;line-height:1.35;margin:6px 0 4px}
+.scripture .ref{font-size:12.5px;color:#cdeae6;font-weight:600}
+.scripture .enc{font-size:13px;color:#e7f4f2;margin-top:8px;border-top:1px solid rgba(255,255,255,.18);padding-top:8px}
+.goalcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+.goalcard h3{font-family:var(--disp);font-weight:600;font-size:16px;margin:0 0 12px}
+.goalgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.gfield label{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--grey);font-weight:600;margin-bottom:4px}
+.gfield input{width:100%;font-family:var(--ui);font-size:13px;padding:8px;border:1px solid var(--line);border-radius:9px}
+.counttiles{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.ctile{flex:1;min-width:120px;border:1px solid var(--line);border-radius:11px;padding:11px;text-align:center}
+.ctile b{display:block;font-family:var(--mono);font-size:22px;color:var(--ink)}
+.ctile span{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--grey)}
+.appprog{margin-top:12px}.appprog .t{font-size:12px;color:var(--ink2);margin-bottom:5px;display:flex;justify-content:space-between}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.controls input[type=search],.controls select{font-family:var(--ui);font-size:13px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.controls input[type=search]{min-width:180px;flex:1}
+.toggle{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink2);background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:10px;user-select:none}
+.count{margin-left:auto;font-size:12px;color:var(--grey)}
+.note{background:#FBF4E6;border:1px solid #EAD9B0;color:#7a5a14;border-radius:10px;padding:9px 12px;font-size:12.5px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+.roles{display:flex;flex-direction:column;gap:12px}
+.role{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow)}
+.role.done{opacity:.62}
+.role .top{display:flex;gap:10px;align-items:flex-start}
+.role .co{font-weight:700;font-size:15px}.role .rl{color:var(--ink2);font-size:13px}
+.role .meta{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 4px}
+.chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);background:#fff}
+.chip.lane{color:#fff;border:0}.chip.ver{background:#EAF3EC;color:#2F8F5B;border:0}.chip.tgt{background:#F2EEE4;color:#8a6a18;border:0}
+.fitdots{display:inline-flex;gap:2px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;background:#DAD5C9}.dot.f{background:var(--gold)}
+.comp{font-family:var(--mono);font-size:12px;color:var(--ink2)}.comp b{color:var(--ink)}
+.chk{font-size:11px;color:var(--grey);margin:2px 0 0}
+.rc{font-size:12.5px;color:var(--grey);margin:8px 0 10px;border-left:2px solid var(--line);padding-left:10px}
+.row2{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.role select{font-size:12.5px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;font-weight:600}
+.role .date{font-size:12.5px;padding:7px 9px;border:1px solid var(--line);border-radius:9px}
+.applybtn{font-size:12.5px;font-weight:600;text-decoration:none;padding:7px 12px;border-radius:9px;background:var(--ink);color:#fff;border:1px solid var(--ink)}
+.applybtn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.notes{width:100%;margin-top:10px;font-family:var(--ui);font-size:12.5px;border:1px solid var(--line);border-radius:9px;padding:8px;resize:vertical;min-height:34px;color:var(--ink)}
+.flag{font-size:11.5px;font-weight:700;color:var(--red);margin-top:8px}.flag.ok{color:var(--teal)}
+.side{display:flex;flex-direction:column;gap:18px;position:sticky;top:16px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.box h3{font-family:var(--disp);font-weight:600;font-size:16px;margin:0 0 12px}
+.donow{display:flex;flex-direction:column;gap:9px}
+.todo{display:flex;gap:9px;align-items:flex-start;font-size:13px;padding:9px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.todo .tag{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:6px;color:#fff;white-space:nowrap}
+.t-apply{background:var(--gold)}.t-follow{background:var(--blue)}.t-prep{background:var(--plum)}.t-warm{background:var(--teal)}
+.todo small{color:var(--grey);display:block}.empty{color:var(--grey);font-size:13px;font-style:italic}
+.funnel{display:flex;flex-direction:column;gap:6px}
+.stage{display:flex;align-items:center;gap:10px}
+.stage .bar{height:26px;border-radius:7px;background:var(--teal);min-width:26px;transition:width .5s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-family:var(--mono);font-size:12px;font-weight:600}
+.stage .nm{font-size:12px;color:var(--ink2);width:78px;text-align:right}
+.lanebar{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12px}.lanebar .t{width:96px;color:var(--ink2)}.lanebar .b{height:8px;border-radius:999px}
+.check{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.check:last-child{border-bottom:0}
+.check input{margin-top:3px;width:17px;height:17px;accent-color:var(--teal)}.check .ct{font-size:13.5px}
+.check.done .ct{text-decoration:line-through;color:var(--grey)}
+.copybox{background:#F7F5EF;border:1px dashed var(--line);border-radius:10px;padding:11px;font-size:12.5px;margin-top:8px;position:relative}
+.copybox .cp{position:absolute;top:8px;right:8px;font-size:11px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 8px}
+.prog{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:14px}.prog i{display:block;height:100%;background:var(--teal);transition:width .4s}
+.net{width:100%;border-collapse:collapse;font-size:13px}
+.net th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);padding:8px;border-bottom:1px solid var(--line)}
+.net td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+.net input,.net select{width:100%;font-family:var(--ui);font-size:12.5px;padding:6px;border:1px solid var(--line);border-radius:8px}
+.net .co{font-weight:700;white-space:nowrap}
+.bands{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.band{border:1px solid var(--line);border-radius:12px;padding:13px}.band .nm{font-weight:700;font-size:13px;margin-bottom:6px}
+.band .scale{height:8px;border-radius:999px;background:linear-gradient(90deg,#E7E3DA,var(--teal));margin:8px 0}
+.band .nums{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11.5px;color:var(--grey)}
+.calc{background:var(--ink);color:#fff;border-radius:14px;padding:18px}.calc h3{color:#fff;font-family:var(--disp);margin:0 0 12px}
+.calc label{display:block;font-size:12px;color:#B9C2CC;margin:10px 0 4px}
+.calc select,.calc input{font-family:var(--ui);font-size:14px;padding:9px;border-radius:9px;border:1px solid #33414f;background:var(--ink2);color:#fff;width:100%}
+.verdict{margin-top:14px;padding:13px;border-radius:10px;font-size:13.5px;line-height:1.5}
+.v-low{background:#3a2722;color:#ffd9cd}.v-fair{background:#2a3a2f;color:#cfe9d7}.v-strong{background:#243a39;color:#bdeae6}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:26px;text-align:center;background:#fff}
+.drop.has{border-style:solid;border-color:var(--teal);background:#F3F8F7;text-align:left}
+.drop .big{font-family:var(--disp);font-size:17px;margin-bottom:4px}
+.filebtn{display:inline-block;margin-top:10px;background:var(--ink);color:#fff;border-radius:9px;padding:8px 14px;font-weight:600;font-size:13px}
+.fileinfo{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.fileinfo .nm{font-weight:700}
+.linkbtn{font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;color:var(--ink2);text-decoration:none}
+.pb{margin-bottom:16px}.pb h4{font-family:var(--disp);font-weight:600;font-size:15px;margin:0 0 6px}
+.pb ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7}
+.seg{display:inline-flex;gap:2px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:16px}
+.segb{border:0;background:transparent;padding:8px 14px;border-radius:8px;font-weight:600;font-size:13px;color:var(--grey)}
+.segb[aria-selected=true]{background:var(--ink);color:#fff}
+.nview{display:none}.nview.on{display:block}
+.addform{margin-bottom:16px}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}
+.addform input,.addform select{font-family:var(--ui);font-size:13px;padding:9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%}
+.primary{background:var(--gold);color:#1b1b1b;border:0;border-radius:9px;padding:9px 16px;font-weight:700;font-size:13px}
+.crmstats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.cst{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;box-shadow:var(--shadow)}
+.cst b{display:block;font-family:var(--mono);font-size:22px}.cst span{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--grey)}
+.ccard,.icard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
+.icard.win{border-color:var(--teal);background:#F3F8F7}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.cn{font-weight:700;font-size:15px}
+.cmeta{font-size:12.5px;color:var(--grey);margin:3px 0 8px}
+.crow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.crow label{font-size:11px;color:var(--grey);font-weight:600;display:flex;flex-direction:column;gap:3px}
+.crow select,.crow input{font-family:var(--ui);font-size:12.5px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;font-weight:400;color:var(--ink)}
+.cinp{width:100%;font-family:var(--ui);font-size:12.5px;padding:8px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;color:var(--ink)}
+.del{border:0;background:transparent;color:var(--grey);font-size:20px;line-height:1;cursor:pointer;padding:0 4px}.del:hover{color:var(--red)}
+.empty2{color:var(--ink2);font-size:13.5px}
+.needlist{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tmpl{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+.tmpl h4{font-family:var(--disp);font-weight:600;font-size:15px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tmpl .tcp{flex:none;font-size:11px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 10px;font-weight:600;color:var(--ink);cursor:pointer}
+.tmpl .tcp:hover{border-color:var(--gold);color:var(--gold)}
+.tmpl .body{white-space:pre-wrap;font-size:12.5px;background:#F7F5EF;border:1px dashed var(--line);border-radius:9px;padding:11px 11px;position:relative;line-height:1.55}
+.tmpl .cp{position:absolute;top:8px;right:8px;font-size:11px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 8px}
+.foot{margin-top:26px;font-size:12px;color:var(--grey);display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.reset{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;color:var(--ink2)}
+.saved{font-size:12px;color:var(--teal);font-weight:600;opacity:0;transition:opacity .3s}.saved.show{opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="hd">
+    <div class="id">
+      <div class="eyebrow">Search Command · Atlanta · verified Jun 11, 2026</div>
+      <h1>Jordan Moran</h1>
+      <div class="sub">57 matched roles · gamified · your progress, resume & goals save automatically</div>
+    </div>
+    <div class="ring">
+      <svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true">
+        <circle cx="29" cy="29" r="24" fill="none" stroke="#33414f" stroke-width="6"/>
+        <circle id="ringArc" cx="29" cy="29" r="24" fill="none" stroke="#C8881E" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" transform="rotate(-90 29 29)"/>
+      </svg>
+      <div class="lab"><b id="dayNum">—</b><span id="ringLab">to hire-by goal</span></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b id="kApplied">0</b><span>Applied</span></div>
+      <div class="kpi"><b id="kInt">0</b><span>Interviews</span></div>
+      <div class="kpi"><b id="kOffer">0</b><span>Offers</span></div>
+    </div>
+  </div>
+</header>
+<div class="statbar"><div class="statin">
+  <div class="lvl"><span class="lvlpill" id="lvlPill">Lv 1</span>
+    <div class="xpwrap"><div class="xpbar"><i id="xpFill"></i></div><div class="xptext" id="xpText">0 XP</div></div></div>
+  <div class="badges" id="badges"></div>
+  <div class="runway" id="runway"></div>
+</div></div>
+
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" aria-selected="true" data-t="pipeline">Pipeline</button>
+  <button class="tab" role="tab" aria-selected="false" data-t="resume">Resume</button>
+  <button class="tab" role="tab" aria-selected="false" data-t="playbook">Playbook</button>
+  <button class="tab" role="tab" aria-selected="false" data-t="profile">Profile</button>
+  <button class="tab" role="tab" aria-selected="false" data-t="network">Network</button>
+  <button class="tab" role="tab" aria-selected="false" data-t="templates">Templates</button>
+  <button class="tab" role="tab" aria-selected="false" data-t="negotiate">Negotiate</button>
+</div>
+
+<div class="wrap">
+  <section class="panel on" id="pipeline">
+    <div class="scripture" id="scripture"></div>
+    <div class="goalcard">
+      <h3>Your goal</h3>
+      <div class="goalgrid">
+        <div class="gfield"><label>Goal</label><input id="gTitle" placeholder="e.g. Land a $70–90k role"></div>
+        <div class="gfield"><label>Hire-by date</label><input id="gHire" type="date"></div>
+        <div class="gfield"><label>Last day at current job</label><input id="gLeave" type="date"></div>
+        <div class="gfield"><label>Application goal</label><input id="gApps" type="number" min="1" placeholder="20"></div>
+      </div>
+      <div class="counttiles">
+        <div class="ctile"><b id="tDays">—</b><span>days to hire-by</span></div>
+        <div class="ctile"><b id="tRun">—</b><span>days of runway</span></div>
+        <div class="ctile"><b id="tApps">0</b><span>applications</span></div>
+        <div class="ctile"><b id="tInt">0</b><span>interviews</span></div>
+      </div>
+      <div class="appprog"><div class="t"><span id="goalLabel">Land a role</span><span id="appPct"></span></div><div class="prog"><i id="appFill"></i></div></div>
+    </div>
+    <div class="note"><b>Read the tags.</b> <span style="color:#2F8F5B;font-weight:700">● Live</span> = a current posting I found (where/when in the row). <span style="color:#8a6a18;font-weight:700">○ Active hirer</span> = the org hires this role regularly — confirm the live req. Postings close fast; re-check before relying.</div>
+    <div class="controls">
+      <input type="search" id="q" placeholder="Search company or role…" aria-label="Search">
+      <select id="fLane" aria-label="Filter by lane"><option value="">All lanes</option></select>
+      <select id="fStatus" aria-label="Filter by status"><option value="">Any status</option></select>
+      <select id="fVer" aria-label="Filter by verification"><option value="">Live + active</option><option value="verified">Live only</option><option value="target">Active hirers</option></select>
+      <select id="sort" aria-label="Sort"><option value="fit">Sort: Best fit</option><option value="pri">Sort: Priority</option><option value="co">Sort: Company A–Z</option></select>
+      <label class="toggle"><input type="checkbox" id="p1only"> P1 only</label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="grid">
+      <div class="roles" id="roleList"></div>
+      <aside class="side">
+        <div class="box"><h3>Do now</h3><div class="donow" id="doNow"></div></div>
+        <div class="box"><h3>Pipeline funnel</h3><div class="funnel" id="funnel"></div></div>
+        <div class="box"><h3>By lane</h3><div id="laneBreak"></div></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="panel" id="resume">
+    <div class="grid">
+      <div>
+        <div class="box">
+          <h3>Resume vault</h3>
+          <div class="drop" id="drop">
+            <div id="dropEmpty"><div class="big">Keep her current resume here</div>
+              <div style="color:var(--grey);font-size:13px">PDF or Word, up to ~4MB. It saves with everything else and is ready to attach when applying.</div>
+              <label class="filebtn">Upload resume<input type="file" id="resumeFile" accept=".pdf,.doc,.docx" hidden></label></div>
+            <div id="dropFull" style="display:none"></div>
+          </div>
+          <h3 style="margin-top:18px">Master resume text</h3>
+          <p style="font-size:12.5px;color:var(--grey);margin-top:-6px">Paste the plain text once. Then copy + tweak it per role — tailoring beats a generic send every time.</p>
+          <textarea id="resumeText" class="notes" style="min-height:150px" placeholder="Paste resume text here…"></textarea>
+        </div>
+      </div>
+      <aside class="side"><div class="box">
+        <h3>Tailoring quick-hits</h3>
+        <ul style="font-size:13px;padding-left:18px;line-height:1.7;margin:0">
+          <li>Mirror the job post's exact words for skills (ATS scans for them).</li>
+          <li>Lead each bullet with a verb + a number (accounts, revenue, events, leasing volume).</li>
+          <li>Put the 2.5-yr family-business block up top as the stability anchor.</li>
+          <li>One page. Cut anything older or off-target.</li>
+          <li>Save each tailored copy as "Resume — [Company]".</li>
+        </ul>
+      </div></aside>
+    </div>
+  </section>
+
+  <section class="panel" id="playbook">
+    <div class="grid">
+      <div id="pbCol1"></div>
+      <div id="pbCol2"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="profile">
+    <div class="grid">
+      <div><div class="box"><h3>LinkedIn fixes — check them off</h3><div class="prog"><i id="pfProg"></i></div><div id="checklist"></div></div></div>
+      <aside class="side"><div class="box">
+        <h3>Paste-ready headline</h3>
+        <div class="copybox"><button class="cp" data-copy="hl">Copy</button><span id="hl">Client &amp; Operations Coordinator | Design + Sales | UGA Communications</span></div>
+        <h3 style="margin-top:16px">Paste-ready About</h3>
+        <div class="copybox"><button class="cp" data-copy="ab">Copy</button><span id="ab">Relationship-driven coordinator with a background spanning sales, project coordination, and executive support — now focused on the home and design industry. I'm at my best as the connective tissue of a team: managing clients and vendors, keeping projects on track, and turning a great first impression into a lasting relationship. UGA Communications grad, raised in a family-operated business where I learned to wear several hats well at once.</span></div>
+      </div></aside>
+    </div>
+  </section>
+
+  <section class="panel" id="network">
+    <p style="font-size:13px;color:var(--grey);margin:0 0 14px">A referral beats a portal every time. Track every relationship and introduction here — who you know, what you want from them, and what each intro turned into.</p>
+    <div class="crmstats" id="crmStats"></div>
+    <div class="seg" role="tablist">
+      <button class="segb" data-nv="people" aria-selected="true">People</button>
+      <button class="segb" data-nv="intros" aria-selected="false">Introductions</button>
+    </div>
+
+    <div class="nview on" id="nv-people">
+      <div class="box addform">
+        <h3>Add a contact</h3>
+        <div class="formgrid">
+          <input id="cName" placeholder="Name *">
+          <input id="cCompany" placeholder="Company">
+          <input id="cTitle" placeholder="Title / role">
+          <input id="cHow" placeholder="How you know them (UGA, church, mutual: Bo…)">
+          <input id="cContact" placeholder="Email / phone / LinkedIn">
+          <select id="cWarm"></select>
+          <select id="cStage"></select>
+          <select id="cLink"></select>
+        </div>
+        <button class="primary" id="addContact">Add contact</button>
+      </div>
+      <div class="controls">
+        <input type="search" id="cq" placeholder="Search contacts…" aria-label="Search contacts">
+        <select id="cfStage" aria-label="Filter by stage"></select>
+        <span class="count" id="cCount"></span>
+      </div>
+      <div id="contactList"></div>
+      <div class="box" id="needConn" style="margin-top:8px"></div>
+    </div>
+
+    <div class="nview" id="nv-intros">
+      <div class="box addform">
+        <h3>Log an introduction</h3>
+        <div class="formgrid">
+          <input id="iFrom" placeholder="Who introduced you (connector) *">
+          <input id="iTo" placeholder="Introduced you to (person / company) *">
+          <input id="iDate" type="date" aria-label="Date">
+          <select id="iChannel"></select>
+          <select id="iStatus"></select>
+        </div>
+        <input id="iNotes" class="cinp" placeholder="Notes / context">
+        <button class="primary" id="addIntro">Log introduction</button>
+      </div>
+      <div id="introList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="templates">
+    <p style="font-size:13px;color:var(--grey);margin:0 0 12px">24 ready-to-send messages — pick a category, copy, fill the [brackets], send. Then log the result on the Network → Introductions tab.</p>
+    <div class="controls"><select id="tmplCat" aria-label="Filter templates by category"></select><span class="count" id="tmplCount"></span></div>
+    <div id="tmplList"></div>
+  </section>
+
+  <section class="panel" id="negotiate">
+    <div class="box">
+      <h3>What the band actually pays in Atlanta</h3>
+      <p style="font-size:13px;color:var(--grey);margin-top:-4px">Total-comp ranges from current market data. Sales &amp; design are OTE (base + commission); EA is the cleanest straight-base path to $70–90k.</p>
+      <div class="bands" id="bands"></div>
+    </div>
+    <div class="grid" style="margin-top:18px">
+      <div class="box"><h3>Negotiation talking points</h3>
+        <ul style="font-size:13.5px;padding-left:18px;margin:0;line-height:1.7">
+          <li>Anchor to the <b>posted range</b> — when public, ask for the upper third and cite it.</li>
+          <li>Lead with the <b>2.5-year family-business tenure</b> as the stability proof.</li>
+          <li>For OTE roles, negotiate <b>base first</b>, then a 90-day ramp guarantee.</li>
+          <li>If base won't move, trade for a <b>6-month review</b>, signing bonus, or PTO.</li>
+          <li>Never give the first number — return the range and ask their budget.</li>
+        </ul></div>
+      <aside class="side"><div class="calc">
+        <h3>Offer evaluator</h3>
+        <label for="cLane">Lane</label><select id="cLane"></select>
+        <label for="cComp">Total comp offered ($k)</label><input type="number" id="cComp" placeholder="e.g. 78" min="0">
+        <div class="verdict" id="verdict" style="display:none"></div>
+      </div></aside>
+    </div>
+  </section>
+
+  <div class="foot">
+    <button class="reset" id="reset">Reset all progress</button>
+    <span class="saved" id="saved">Saved ✓</span>
+    <span>Verified Jun 11, 2026. Comp figures are market estimates. Re-check any posting before relying on it.</span>
+  </div>
+</div>
+
+<script>
+const LANES={"EA/Ops":{c:"var(--teal)",lbl:"EA / Ops"},"Sales":{c:"var(--gold)",lbl:"Sales / AE"},"Multifamily":{c:"var(--blue)",lbl:"Multifamily"},"Design":{c:"var(--plum)",lbl:"Design retail / showroom"},"DesignFirm":{c:"#9C6B33",lbl:"Design firm / coordinator"}};
+const STATUSES=["Not started","Researching","Applied","Screening","Interview","Offer","Closed"];
+const STAGES=["Applied","Screening","Interview","Offer"];
+const BANDS={"EA/Ops":[71,87,108],"Sales":[70,95,120],"Multifamily":[58,71,89],"Design":[45,70,90],"DesignFirm":[45,58,72]};
+const LV=["Getting started","Warmed up","In motion","Building momentum","Closing in","On fire","Unstoppable"];
+const SCRIPTURE=[
+ ["For I know the thoughts that I think toward you, says the LORD — thoughts of peace, to give you a future and a hope.","Jeremiah 29:11","The search has a destination, even on the days it feels random."],
+ ["Commit your works to the LORD, and your plans will be established.","Proverbs 16:3","Send the application, then release the outcome. Do your part; trust the rest."],
+ ["Trust in the LORD with all your heart, and don't lean on your own understanding.","Proverbs 3:5","You don't have to see the whole staircase to take today's step."],
+ ["Be strong and courageous. Don't be afraid, for the LORD your God is with you wherever you go.","Joshua 1:9","Walk into the interview like Someone already went ahead of you. He did."],
+ ["I can do all things through Christ who strengthens me.","Philippians 4:13","Strength for the next email, the next call, the next no — it's renewed for today."],
+ ["Don't be anxious about anything, but in everything, by prayer, let your requests be made known to God.","Philippians 4:6","Trade the spiral for a sentence: tell Him the thing you're carrying."],
+ ["Don't be afraid, for I am with you. I will strengthen you. I will help you.","Isaiah 41:10","Rejection is redirection. You are held the whole way through it."],
+ ["Whatever you do, work heartily, as for the Lord and not for men.","Colossians 3:23","Your effort is worship before it's ever a résumé line."],
+ ["Commit your way to the LORD. Trust also in him, and he will act.","Psalm 37:5","Faithfulness in the small follow-ups is its own kind of prayer."],
+ ["Seek first God's Kingdom and his righteousness, and all these things will be added to you.","Matthew 6:33","Keep first things first; the provision tends to follow the priorities."],
+ ["All things work together for good for those who love God, who are called according to his purpose.","Romans 8:28","Even the door that closed is part of the route to the right one."],
+ ["God didn't give us a spirit of fear, but of power, and love, and a sound mind.","2 Timothy 1:7","Negotiate from courage, not scarcity. You bring real value."],
+ ["Establish the work of our hands for us — yes, establish the work of our hands.","Psalm 90:17","Ask Him to bless the work, then put your hands to it."],
+ ["Those who wait for the LORD will renew their strength; they will mount up with wings like eagles.","Isaiah 40:31","A waiting season is not a wasted season."],
+ ["Wait for the LORD. Be strong, and let your heart take courage.","Psalm 27:14","Courage and patience aren't opposites — today you get to practice both."],
+ ["Let us not be weary in doing good, for in due season we will reap if we don't give up.","Galatians 6:9","The breakthrough often comes one application after you wanted to stop."],
+ ["If any of you lacks wisdom, let him ask of God, who gives to all generously.","James 1:5","Pray over which lane to push today — then move with confidence."],
+ ["Be steadfast, immovable, always abounding in the work of the Lord, because your labor is not in vain.","1 Corinthians 15:58","None of this effort is wasted, even the parts no one sees."],
+ ["May he grant you your heart's desire, and fulfill all your plans.","Psalm 20:4","Name the desire honestly. He already knows it."],
+ ["Be strong and courageous — for the LORD your God goes with you; he will never leave you nor forsake you.","Deuteronomy 31:6","You are not doing this alone, and you never were."],
+ ["Strength and dignity are her clothing. She laughs at the time to come.","Proverbs 31:25","Walk in dignity today. The future is not something to fear."],
+ ["The LORD your God is among you, a mighty one who will save.","Zephaniah 3:17","The God who is for you is also delighted in you — interviewer or not."],
+ ["The LORD will fulfill his purpose for me.","Psalm 138:8","He finishes what He starts, including the work He's doing in you."],
+ ["Do you see someone skilled in their work? They will serve before kings.","Proverbs 22:29","Keep sharpening the craft. Skill makes room."],
+];
+const PROFILE=[
+ {id:'dates',t:'Fix the duplicate concurrent-dates issue — present Summit + Sales, Inc. as real, simultaneous family-business roles (not an error).'},
+ {id:'headline',t:'Replace the headline with the paste-ready version →'},
+ {id:'about',t:'Add the About summary (draft →).'},
+ {id:'bullets',t:'Rewrite every experience entry with quantified bullets.'},
+ {id:'consolidate',t:'Group Summit + Sales, Inc. into one clearly-concurrent, family-operated block — the 2.5-yr tenure anchor.'},
+ {id:'locum',t:'Keep LocumTenens; switch the display to years-only (do NOT alter dates to fake continuity).'},
+ {id:'skills',t:'Expand skills to 15+: Account Management, Client Relations, Vendor Coordination, CRM, Merchandising, Excel, Event Coordination.'},
+ {id:'endorse',t:'Get 4 endorsements + 2 written recommendations.'},
+ {id:'photo',t:'Professional headshot + simple branded banner.'},
+ {id:'activity',t:'Post or reshare 2–3 times so she reads as active and findable.'},
+];
+const PLAYBOOK=[
+ {h:"Application strategy",items:["Apply within 48 hours of a posting going live — early applicants get seen most.","Quality over volume: 3 tailored applications beat 15 generic ones.","Work P1s first thing in the morning when you're sharp.","Track every application here so nothing slips and follow-ups are easy."]},
+ {h:"Warm intros (the real unlock)",items:["Before applying to a target, check who in the network knows someone there.","A referral can 4–10x the odds of a callback vs. a cold portal apply.","LocumTenens is a boomerang — message your old manager before anything else.","Ask for a 15-minute coffee/call, not 'a job' — relationships open doors."]},
+ {h:"Interview prep (STAR)",items:["Answer behavioral questions with Situation, Task, Action, Result — end on the number.","Prep 5 stories you can flex: a win, a conflict, a failure, a leadership moment, a client save.","Research the company 20 min before: recent news, who you're meeting, one smart question.","Always close with: 'Based on our conversation, do you have any hesitations about me?'"]},
+ {h:"Follow-up cadence",items:["Send a thank-you note within 24 hours of every interview — specific, not generic.","No reply in 5 business days after applying? A short, polite nudge is fair game.","Keep notes in each role card so follow-ups reference real details.","Persistence is professional; pestering is daily. Space it out."]},
+ {h:"LinkedIn & visibility",items:["Recruiters search by keywords — put target-role words in your headline and skills.","Turn on 'Open to Work' (recruiters-only mode) for the lanes you want.","Engage lightly: a few thoughtful comments make you findable and human.","A clear headshot + banner measurably increases profile views."]},
+ {h:"Mindset & rhythm",items:["Set a daily minimum (e.g., 2 applications + 1 outreach) and stop when it's done.","Rejection is data, not a verdict on your worth — log it and move.","Protect a weekly sabbath from the search; rest is part of the strategy.","Start each day with the verse up top, then take the next faithful step."]},
+];
+const ROLES=[
+ {id:'riveron',co:'Riveron',role:'Executive Assistant',lane:'EA/Ops',pri:1,loc:'Atlanta · Hybrid',base:'$70–95k',ote:'base $70–95k',fit:4,ver:'verified',chk:'Posted ~Jun 2026 (Glassdoor)',link:'https://riveron.com/careers/',email:'',rc:'Clean fit — her EA stints qualify her. Mid-band realistic.'},
+ {id:'porsche',co:'Porsche Cars N.A.',role:'Operations Support Manager',lane:'EA/Ops',pri:2,loc:'Atlanta HQ · On-site',base:'$90–125k',ote:'$90–125k',fit:3,ver:'verified',chk:'Posted Jun 2026 (Glassdoor)',link:'https://jobs.porsche.com/',email:'',rc:'Manages a COO budget; wants degree + experience. A reach.'},
+ {id:'cox',co:'Cox Enterprises',role:'Executive Assistant',lane:'EA/Ops',pri:1,loc:'Atlanta · Hybrid',base:'$65–90k',ote:'$65–90k',fit:4,ver:'target',chk:'Active hirer — set a job alert',link:'https://jobs.coxenterprises.com/',email:'',rc:'Frequent EA reqs; very marketable here.'},
+ {id:'globalatl',co:'Global Atlantic',role:'Executive Assistant',lane:'EA/Ops',pri:2,loc:'Atlanta · Hybrid',base:'$70–90k',ote:'+ bonus',fit:3,ver:'target',chk:'Posts EA with transparent pay',link:'https://www.globalatlantic.com/careers',email:'',rc:'Corporate EA, in-band; wants polish.'},
+ {id:'homedepot',co:'The Home Depot (SSC)',role:'Exec/Admin Asst or Coordinator',lane:'EA/Ops',pri:2,loc:'Atlanta HQ · On-site',base:'$55–80k',ote:'$55–80k',fit:3,ver:'target',chk:'ATL HQ — high volume',link:'https://careers.homedepot.com/',email:'',rc:'Coordinator + design-retail roles.'},
+ {id:'chickfila',co:'Chick-fil-A Support Center',role:'Coordinator / Admin',lane:'EA/Ops',pri:2,loc:'Atlanta (SC) · Hybrid',base:'$55–75k',ote:'$55–75k',fit:4,ver:'target',chk:'Active hirer — strong culture fit',link:'https://www.chick-fil-a.com/careers',email:'',rc:'Her CFA Leadership Scholarship is a hook.'},
+ {id:'delta',co:'Delta Air Lines',role:'Executive Assistant / Coordinator',lane:'EA/Ops',pri:2,loc:'Atlanta HQ · Hybrid',base:'$60–90k',ote:'$60–90k',fit:3,ver:'target',chk:'ATL HQ — active hirer',link:'https://jobs.delta.com/',email:'',rc:'Major ATL HQ; EA + coordinator roles.'},
+ {id:'ups',co:'UPS',role:'Administrative Coordinator / EA',lane:'EA/Ops',pri:3,loc:'Atlanta HQ · On-site',base:'$55–80k',ote:'$55–80k',fit:3,ver:'target',chk:'ATL global HQ — active hirer',link:'https://www.jobs-ups.com/',email:'',rc:'Stable ATL HQ employer.'},
+ {id:'southernco',co:'Southern Company',role:'Executive Assistant',lane:'EA/Ops',pri:2,loc:'Atlanta HQ · Hybrid',base:'$65–90k',ote:'$65–90k',fit:3,ver:'target',chk:'ATL HQ — active hirer',link:'https://careers.southerncompany.com/',email:'',rc:'Stable ATL HQ; in-band EA.'},
+ {id:'ncr',co:'NCR Voyix',role:'Executive Assistant',lane:'EA/Ops',pri:3,loc:'Atlanta HQ · Hybrid',base:'$60–85k',ote:'$60–85k',fit:3,ver:'target',chk:'ATL tech HQ — active hirer',link:'https://careers.ncrvoyix.com/',email:'',rc:'ATL tech HQ.'},
+ {id:'ihg',co:'IHG Hotels & Resorts',role:'Coordinator / Executive Assistant',lane:'EA/Ops',pri:2,loc:'Atlanta HQ · Hybrid',base:'$55–80k',ote:'$55–80k',fit:4,ver:'target',chk:'ATL HQ — hospitality fit',link:'https://careers.ihg.com/',email:'',rc:'Hospitality culture suits her people skills.'},
+ {id:'gpc',co:'Genuine Parts Company',role:'Executive Assistant / Coordinator',lane:'EA/Ops',pri:3,loc:'Atlanta HQ',base:'$60–85k',ote:'$60–85k',fit:3,ver:'target',chk:'Fortune 500 ATL HQ — active hirer',link:'https://jobs.genpt.com/',email:'',rc:'Large ATL HQ employer.'},
+ {id:'locum',co:'LocumTenens.com',role:'Account Executive / Sales',lane:'Sales',pri:1,loc:'Alpharetta · Hybrid',base:'$45–60k base',ote:'$70–100k+ OTE',fit:4,ver:'target',chk:'WARM boomerang — msg old manager first',link:'https://www.locumtenens.com/careers',email:'',rc:'Best odds — she was an Account Rep here.'},
+ {id:'insightglobal',co:'Insight Global',role:'Recruiter / Account Manager',lane:'Sales',pri:1,loc:'Atlanta HQ · On-site',base:'$50–55k base',ote:'$75–95k OTE',fit:4,ver:'target',chk:'ATL HQ — hires new grads into sales',link:'https://insightglobal.com/careers/',email:'',rc:'Famous high-OTE entry sales/AM path. Strong fit.'},
+ {id:'pearly',co:'Pearly',role:'Account Executive',lane:'Sales',pri:2,loc:'Atlanta · Remote',base:'$45–55k base',ote:'$70–90k OTE',fit:3,ver:'verified',chk:'Posted Jun 2026 (ZipRecruiter)',link:'https://www.ziprecruiter.com/Jobs/Account-Executive/-in-Atlanta,GA',email:'',rc:'Dental-SaaS sales; "1 yr sales" reachable.'},
+ {id:'salesforce',co:'Salesforce',role:'SMB Account Executive',lane:'Sales',pri:3,loc:'Atlanta · On-site',base:'competitive',ote:'~$80–120k OTE',fit:2,ver:'verified',chk:'Posted Apr 2026 (req jr283079)',link:'https://careers.salesforce.com/en/jobs/jr283079/small-medium-and-growth-business-account-executive-atlanta/',email:'',rc:'Competitive; needs a referral. Stretch.'},
+ {id:'aerotek',co:'Aerotek / Actalent',role:'Recruiter / Account Manager',lane:'Sales',pri:1,loc:'Atlanta · On-site',base:'$45–55k base',ote:'$70–90k OTE',fit:4,ver:'target',chk:'Continuous hiring',link:'https://www.aerotek.com/en/careers',email:'',rc:'Classic high-OTE entry sales; strong fit.'},
+ {id:'roberthalf',co:'Robert Half',role:'Staffing Manager / EA placement',lane:'Sales',pri:1,loc:'Atlanta · Hybrid',base:'$50–60k base',ote:'$75–95k OTE',fit:4,ver:'target',chk:'Channel + role — fastest path',link:'https://www.roberthalf.com/us/en',email:'',rc:'Surfaces hidden EA roles for her.'},
+ {id:'randstad',co:'Randstad',role:'Staffing / Account Manager',lane:'Sales',pri:3,loc:'Atlanta',base:'$48–58k base',ote:'$70–90k OTE',fit:3,ver:'target',chk:'Channel + role',link:'https://www.randstadusa.com/',email:'',rc:'Backup staffing channel.'},
+ {id:'greystarCM',co:'Greystar',role:'Community Manager',lane:'Multifamily',pri:2,loc:'Atlanta · On-site',base:'$70–88k',ote:'+ bonus',fit:3,ver:'verified',chk:'Posted now (jobs.greystar.com)',link:'https://jobs.greystar.com/job/atlanta/community-manager/35302/85954120160',email:'',rc:'Largest US apt operator; analytics bridges prior-PM ask.'},
+ {id:'greystarACM',co:'Greystar',role:'Assistant Community Manager',lane:'Multifamily',pri:1,loc:'Atlanta · On-site',base:'$45–55k',ote:'$45–55k',fit:4,ver:'verified',chk:'Posted now (jobs.greystar.com)',link:'https://jobs.greystar.com/job/atlanta/assistant-community-manager/35302/88096566544',email:'',rc:'Realistic entry; ladders to CM.'},
+ {id:'cortland',co:'Cortland',role:'Community Manager',lane:'Multifamily',pri:2,loc:'Atlanta HQ · On-site',base:'$70–85k',ote:'+ bonus',fit:3,ver:'target',chk:'Top-paying CM; ATL HQ',link:'https://cortland.com/careers/',email:'',rc:'Her leasing-analytics title bridges it.'},
+ {id:'camden',co:'Camden Property Trust',role:'Community Manager',lane:'Multifamily',pri:3,loc:'Atlanta metro · On-site',base:'$68–85k',ote:'+ bonus',fit:3,ver:'target',chk:'Top-3 ATL payer',link:'https://www.camdenliving.com/careers',email:'',rc:'Strong operator.'},
+ {id:'amli',co:'AMLI Residential',role:'Community Manager',lane:'Multifamily',pri:3,loc:'Atlanta metro · On-site',base:'$68–85k',ote:'+ bonus',fit:3,ver:'target',chk:'Top-paying CM',link:'https://www.amli.com/careers',email:'',rc:'Luxury multifamily.'},
+ {id:'rangewater',co:'RangeWater Real Estate',role:'Community / Assistant Manager',lane:'Multifamily',pri:2,loc:'Atlanta · On-site',base:'$50–80k',ote:'$50–80k',fit:3,ver:'target',chk:'ATL operator — active (Indeed)',link:'https://www.liverangewater.com/careers',email:'',rc:'Atlanta-based operator.'},
+ {id:'maa',co:'MAA',role:'Community / Assistant Manager',lane:'Multifamily',pri:3,loc:'Atlanta · On-site',base:'$50–80k',ote:'$50–80k',fit:3,ver:'target',chk:'Active hirer (Indeed)',link:'https://careers.maac.com/',email:'',rc:'Large SE multifamily REIT.'},
+ {id:'pegasus',co:'Pegasus Residential',role:'Assistant Community Manager',lane:'Multifamily',pri:3,loc:'Atlanta · On-site',base:'$45–60k',ote:'$45–60k',fit:3,ver:'target',chk:'Active hirer (Indeed)',link:'https://www.pegasusresidential.com/careers',email:'',rc:'Entry to multifamily ops.'},
+ {id:'ram',co:'RAM Partners',role:'Community / Assistant Manager',lane:'Multifamily',pri:3,loc:'Atlanta HQ · On-site',base:'$50–80k',ote:'$50–80k',fit:3,ver:'target',chk:'ATL HQ operator — active',link:'https://rampartners.com/careers/',email:'',rc:'Atlanta-based operator.'},
+ {id:'highmark',co:'Highmark Residential',role:'Community / Assistant Manager',lane:'Multifamily',pri:3,loc:'Atlanta · On-site',base:'$50–80k',ote:'$50–80k',fit:3,ver:'target',chk:'Active hirer (Indeed)',link:'https://www.highmarkres.com/careers',email:'',rc:'Large multifamily operator.'},
+ {id:'golub',co:'Golub & Company',role:'Residential Property Manager',lane:'Multifamily',pri:3,loc:'Atlanta · On-site',base:'$55–85k',ote:'$55–85k',fit:3,ver:'target',chk:'Active hirer (Indeed)',link:'',email:'',rc:'Manages ATL residential assets.'},
+ {id:'grubb',co:'Grubb Properties',role:'Assistant CM → CM track',lane:'Multifamily',pri:2,loc:'Link Apts Canvas, Atlanta',base:'$55–70k',ote:'$55–70k',fit:3,ver:'verified',chk:'Posted May 2026 (ZipRecruiter)',link:'https://www.ziprecruiter.com/Jobs/Property-Manager/-in-Atlanta,GA',email:'',rc:'Fast, realistic entry.'},
+ {id:'arhaus',co:'Arhaus',role:'Design Consultant',lane:'Design',pri:1,loc:'Phipps Plaza, Buckhead · On-site',base:'$40–50k base',ote:'$70–130k OTE',fit:4,ver:'verified',chk:'Posted now (Phipps Plaza, FT)',link:'https://www.linkedin.com/jobs/view/sales-associate-design-consultant-full-time-at-arhaus-4270796182',email:'',rc:'Keeps her in design; band at high volume. No degree needed.'},
+ {id:'ballard',co:'Ballard Designs',role:'Design Consultant',lane:'Design',pri:2,loc:'Atlanta (Defoor HQ + flagship)',base:'$38–48k base',ote:'$60–90k OTE',fit:4,ver:'verified',chk:'Active hirer 14–23 open; ATL HQ',link:'https://www.ballarddesigns.com/BallardDesigns/US/Footer/AboutUs/career-opportunities/content-path',email:'',rc:'Many openings. Mixed reviews — negotiate.'},
+ {id:'rh',co:'RH (Restoration Hardware)',role:'Designer / Design Associate',lane:'Design',pri:3,loc:'Atlanta Gallery, Buckhead · On-site',base:'$45–55k base',ote:'$60–90k w/ sales',fit:3,ver:'target',chk:'Active hirer — check careers',link:'https://rh.com/careers',email:'',rc:'Prestige; band with strong sales.'},
+ {id:'crate',co:'Crate & Barrel / CB2',role:'Designer (design desk)',lane:'Design',pri:2,loc:'Lenox / Buckhead · On-site',base:'$40–55k base',ote:'+ commission',fit:3,ver:'target',chk:'Rolling Designer roles',link:'https://crateandbarrel.com/careers',email:'',rc:'Space-planning + sales; no degree.'},
+ {id:'westelm',co:'West Elm (WSI)',role:'Design Crew Associate',lane:'Design',pri:3,loc:'Atlanta · On-site',base:'$40–55k base',ote:'+ commission',fit:3,ver:'target',chk:'Check WSI careers',link:'https://www.williams-sonomainc.com/careers/',email:'',rc:'In-home design service arm.'},
+ {id:'potterybarn',co:'Pottery Barn (WSI)',role:'Design Studio Associate',lane:'Design',pri:3,loc:'Atlanta · On-site',base:'$40–55k base',ote:'+ commission',fit:3,ver:'target',chk:'Check WSI careers',link:'https://www.williams-sonomainc.com/careers/',email:'',rc:'Similar to West Elm.'},
+ {id:'ethanallen',co:'Ethan Allen',role:'Design Consultant',lane:'Design',pri:2,loc:'Atlanta · On-site',base:'$40–50k base',ote:'$60–90k OTE',fit:4,ver:'target',chk:'Active hirer — design + sales, no degree',link:'https://www.ethanallen.com/careers',email:'',rc:'Design + sales; no design degree required.'},
+ {id:'bassett',co:'Bassett Home Furnishings',role:'Design Consultant',lane:'Design',pri:3,loc:'Atlanta · On-site',base:'$40–50k base',ote:'$55–85k OTE',fit:3,ver:'target',chk:'Active hirer',link:'https://www.bassettfurniture.com/careers',email:'',rc:'Furniture design-sales.'},
+ {id:'lazboy',co:'La-Z-Boy',role:'In-store Interior Designer',lane:'Design',pri:3,loc:'Atlanta · On-site',base:'$40–55k base',ote:'$55–85k OTE',fit:3,ver:'target',chk:'Active hirer — no degree',link:'https://www.la-z-boy.com/careers',email:'',rc:'In-home design consult; no degree needed.'},
+ {id:'bakermcguire',co:'Baker | McGuire (ADAC)',role:'Showroom Sales Associate',lane:'Design',pri:2,loc:'ADAC · Hybrid in/out',base:'$40–50k base',ote:'$50–70k OTE',fit:4,ver:'verified',chk:'Confirmed Jun 11 (ADAC, listed May 5)',link:'',email:'bkratlatna@bakerinteriorsgroup.com',rc:'The one role with a real application email. Needs a car.'},
+ {id:'andmore',co:'ANDMORE (ADAC)',role:'Office Operations Coordinator',lane:'Design',pri:1,loc:'Buckhead / ADAC · On-site',base:'$45–58k',ote:'$45–58k',fit:5,ver:'verified',chk:'Confirmed Jun 11 (ADAC, listed Jun 10)',link:'https://recruiting.ultipro.com/INT1084IMCM/JobBoard/b69db719-fdeb-44a5-b091-2422ce42cbde/OpportunityDetail?opportunityId=715b3a48-f977-471b-a01d-a7cc58f6dfcb',email:'',rc:'Below band but the best literal match + foot into ADAC.'},
+ {id:'currey',co:'Currey & Company',role:'Customer Experience / Sales Support',lane:'Design',pri:2,loc:'Atlanta · On-site',base:'$48–62k',ote:'$48–62k',fit:4,ver:'target',chk:'ATL to-the-trade brand — check careers',link:'https://www.curreyco.com/careers',email:'',rc:'Coordination-heavy; fits well.'},
+ {id:'pierrefrey',co:'Pierre Frey (ADAC)',role:'Showroom / Customer Liaison',lane:'Design',pri:2,loc:'Brookhaven · On-site',base:'$48–62k',ote:'$48–62k',fit:4,ver:'target',chk:'ADAC luxury textile — liaison role (verify)',link:'',email:'yarnell.talley@pierrefrey.com',rc:'Customer/showroom liaison — coordination-heavy, her fit.'},
+ {id:'renaissance',co:'Renaissance Tile & Bath (ADAC)',role:'Showroom Manager',lane:'Design',pri:3,loc:'ADAC · On-site',base:'$70–90k+',ote:'$70–90k+',fit:2,ver:'verified',chk:'Confirmed Jun 11 (ADAC) — stretch',link:'',email:'rwhite@rentile.com',rc:'In-band pay but wants 5 yr sales / 3 yr mgmt.'},
+ {id:'hamlin',co:'The Hamlin Group',role:'Design Selections / Client Coordinator',lane:'DesignFirm',pri:1,loc:'Atlanta metro',base:'$50–70k',ote:'$50–70k',fit:4,ver:'verified',chk:'Posted Jun 2026 (Glassdoor)',link:'https://www.glassdoor.com/Job/atlanta-interior-designer-jobs-SRCH_IL.0,7_IC1155583_KO8,25.htm',email:'',rc:'Client selections + vendors, NO CAD — squarely her profile.'},
+ {id:'weekley',co:'David Weekley Homes',role:'Design Center Coordinator',lane:'DesignFirm',pri:2,loc:'Atlanta',base:'$50–65k',ote:'$50–65k',fit:4,ver:'verified',chk:'Posted Jun 2026 (Indeed)',link:'https://www.indeed.com/q-interior-designer-assistant-l-atlanta,-ga-jobs.html',email:'',rc:'Client-facing, sales-y, no heavy CAD.'},
+ {id:'racetrac',co:'RaceTrac',role:'Asst Program Manager, Store Planning',lane:'DesignFirm',pri:2,loc:'Atlanta HQ',base:'$60–80k',ote:'$60–80k',fit:3,ver:'verified',chk:'Posted 2026 (Glassdoor)',link:'https://www.glassdoor.com/Job/atlanta-design-assistant-jobs-SRCH_IL.0,7_IC1155583_KO8,24.htm',email:'',rc:'Design-adjacent ops at an ATL HQ.'},
+ {id:'mosaic',co:'MOSAIC Design + Build',role:'Assistant Interior Designer',lane:'DesignFirm',pri:3,loc:'Dunwoody',base:'$45–58k',ote:'$45–58k',fit:3,ver:'verified',chk:'Posted 2026 (CreativeLoft)',link:'https://interior-design.thecreativeloft.com/interior-design-jobs/in-atlanta/',email:'',rc:'May want some design skill.'},
+ {id:'closetshop',co:'The Closet Shop',role:'Designer (design + sales)',lane:'DesignFirm',pri:3,loc:'Atlanta',base:'$45–60k + comm',ote:'$45–60k + comm',fit:3,ver:'verified',chk:'Posted 2026 (ZipRecruiter)',link:'https://www.ziprecruiter.com/Jobs/Interior-Designer/-in-Atlanta,GA',email:'',rc:'Degree preferred but NOT required.'},
+ {id:'kasler',co:'Suzanne Kasler Interiors',role:'Design Assistant / Studio Coordinator',lane:'DesignFirm',pri:2,loc:'Atlanta',base:'$45–58k',ote:'$45–58k',fit:3,ver:'target',chk:'Top firm — network in / check site',link:'',email:'',rc:'Elite ATL residential firm.'},
+ {id:'turner',co:'Melanie Turner Interiors',role:'Studio Coordinator',lane:'DesignFirm',pri:3,loc:'Atlanta',base:'$45–58k',ote:'$45–58k',fit:3,ver:'target',chk:'Network in',link:'',email:'',rc:'Award-winning ATL firm.'},
+ {id:'regas',co:'Regas Interiors',role:'Studio Coordinator',lane:'DesignFirm',pri:2,loc:'Atlanta · On-site',base:'$45–58k',ote:'$45–58k',fit:4,ver:'target',chk:'Small collaborative studio — warm intro best',link:'',email:'',rc:'Exactly her coordinator strength.'},
+ {id:'habachy',co:'Habachy Designs (ADAC)',role:'Design Assistant / Showroom',lane:'DesignFirm',pri:3,loc:'Atlanta / ADAC',base:'$45–58k',ote:'$45–58k',fit:3,ver:'target',chk:'ADAC studio/showroom — network in',link:'',email:'',rc:'Scandinavian-inspired studio + showroom.'},
+ {id:'bethwebb',co:'Beth Webb Interiors',role:'Studio / Operations',lane:'DesignFirm',pri:3,loc:'Atlanta',base:'$45–58k',ote:'$45–58k',fit:3,ver:'target',chk:'Network in',link:'',email:'',rc:'Award-winning ATL firm.'},
+ {id:'robertbrown',co:'Robert Brown Interior Design',role:'Design Assistant',lane:'DesignFirm',pri:3,loc:'Buckhead',base:'$42–55k',ote:'$42–55k',fit:3,ver:'target',chk:'Network in',link:'',email:'',rc:'Established Buckhead firm.'},
+ {id:'markwilliams',co:'Mark Williams Design Associates',role:'Coordinator / Assistant',lane:'DesignFirm',pri:3,loc:'Atlanta',base:'$42–55k',ote:'$42–55k',fit:3,ver:'target',chk:'Network in',link:'',email:'',rc:'ATL residential firm.'},
+];
+const NET_SEED=ROLES.filter(r=>r.pri===1).map(r=>r.id);
+const CSTAGES=["To reach out","Reached out","In conversation","Intro requested","Intro made","Referred me","Ongoing","Dormant"];
+const ICHAN=["Email","LinkedIn","In person","Event","Phone","Text"];
+const ISTAT=["Requested","Scheduled","Happened","Thank-you sent","Led to interview","Led to offer","No response"];
+const WARMOPT=[["3","🔥 Hot — close"],["2","☀️ Warm"],["1","❄️ Cold / new"]];
+const TCATS=['Networking & outreach','Applying','Interviewing','Offer & negotiation','Thank-yous & wrap-up'];
+const TEMPLATES=[
+ {c:'Networking & outreach',t:'LinkedIn connection request (recruiter / hiring manager)',b:"Hi [Name] — I just applied for the [Role] role at [Company] and wanted to connect directly. I'm a client-and-operations coordinator with a sales and design background here in Atlanta, and the role is right in my wheelhouse. Would love to be on your radar — thank you!"},
+ {c:'Networking & outreach',t:'Re-connect — LocumTenens (warm boomerang)',b:"Hi [Name] — it's Jordan Moran. I loved being on your team at LocumTenens, and I've kept sharpening my client and sales skills since. I'm exploring my next move and would jump at the chance to bring that back to your team. Could we grab 15 minutes this week so I can hear what's open and where I might add value?"},
+ {c:'Networking & outreach',t:'Reconnect with a dormant contact (old coworker / UGA)',b:"Hi [Name] — it's been too long! I've been thinking back to our [UGA / old team / shared] days. I'm exploring new roles in [design / ops / sales] around Atlanta and would love to catch up and hear what you're up to these days. Coffee or a quick call sometime in the next week or two?"},
+ {c:'Networking & outreach',t:'Ask a mutual connection for an intro',b:"Hey [Name] — hope you're well! I'm job-hunting in Atlanta and noticed you're connected to [Person] at [Company]. Would you be comfortable making a quick intro? Happy to send a short blurb you can just forward. Totally fine if it's not a fit — thank you either way!"},
+ {c:'Networking & outreach',t:'Informational coffee / pick your brain',b:"Hi [Name] — I really admire the work you're doing [at Company / in the Atlanta design world]. I'm exploring a move into [lane] and would value 20 minutes of your perspective — no ask beyond your advice. Could I buy you a coffee or grab a quick call in the next couple of weeks?"},
+ {c:'Networking & outreach',t:'Cold outreach to someone at a target company',b:"Hi [Name] — I'm exploring opportunities at [Company] and saw you lead [team / area]. I'm a [short descriptor] with a track record of [one proof point]. Even if nothing's open right now, I'd love to learn how your team thinks about [relevant thing]. Open to a brief chat?"},
+ {c:'Networking & outreach',t:'Ask a former client or vendor for leads',b:"Hi [Name] — it was always a pleasure working together on [project / account]. I'm making a career move and exploring [lane] roles in Atlanta. If anyone in your network is hiring or worth meeting, I'd be grateful for a name. Thank you — and I hope all's well at [company]!"},
+ {c:'Applying',t:'Email application cover note (direct-email roles)',b:"Hi [Name],\n\nI'd love to be considered for the [Role] at [Company]. I'm a client-and-operations coordinator with a sales and design background — [one tailored line connecting me to this role]. My resume is attached.\n\nI'd welcome the chance to talk about how I can contribute. Thank you for your time and consideration.\n\nWarmly,\nJordan Moran\n[phone] · [email] · [LinkedIn]"},
+ {c:'Applying',t:'Recruiter note after applying online',b:"Hi [Name] — I just applied for the [Role] opening at [Company]. Quick note to put a name to the application: I'm a client-and-operations coordinator with a sales + design background, and the role lines up closely with what I do best. I'd welcome the chance to share why. Thanks for considering me!"},
+ {c:'Applying',t:'Follow-up when you have a referral',b:"Hi [Name] — [Referrer] suggested I reach out. I just applied for the [Role] at [Company], and they thought I'd be a strong fit given my background in [relevant strength]. I'd love a few minutes to share how I could contribute to your team. Thank you!"},
+ {c:'Applying',t:'Polite follow-up — no response yet',b:"Hi [Name] — following up on my application for [Role] from [date]. I'm very interested in [Company] and would love to be considered. Is there anything else I can share to help? Thank you for your time."},
+ {c:'Applying',t:'Responding to a recruiter who reached out',b:"Hi [Name] — thank you for reaching out; I'd be glad to learn more about the [Role]. A quick snapshot of me: [one or two lines on background]. I'm targeting roles around [$70–90k] in or near Atlanta. When's a good time for a brief call this week?"},
+ {c:'Interviewing',t:'Confirming / accepting an interview',b:"Hi [Name] — thank you for the invitation; I'm looking forward to it. Confirming [day, date] at [time] [location / video link]. Please let me know if you need anything from me beforehand. See you then!"},
+ {c:'Interviewing',t:'Thank-you after an interview',b:"Hi [Name] — thank you for the conversation today about the [Role]. I left even more excited about [specific thing discussed], and it reinforced that my background in [relevant strength] would let me contribute quickly. Please let me know if any other questions come up — I'd love to keep the conversation going."},
+ {c:'Interviewing',t:'Thank-you after a panel / final round',b:"Hi [Name] — thank you (and the team) for the time today. It was great to dig into [topic] with [other interviewer], and it left me confident I could add value fast on [specific area]. I'm very enthusiastic about [Company] and the [Role] — thank you for such a thoughtful process."},
+ {c:'Interviewing',t:'Status check after their timeline passed',b:"Hi [Name] — I hope you're well. You'd mentioned hearing back around [date], so I wanted to check in. I remain very interested in the [Role] at [Company] and am happy to provide anything else that would be helpful. Thank you!"},
+ {c:'Offer & negotiation',t:'Ask for time to consider an offer',b:"Thank you so much, [Name] — I'm thrilled to receive the offer for [Role]. This is an important decision and I want to give it the consideration it deserves. Could I have until [date — 2-3 business days] to review and get back to you? I really appreciate it."},
+ {c:'Offer & negotiation',t:'Salary counter',b:"Thank you again for the offer — I'm genuinely excited about the [Role] at [Company]. Based on my experience in [relevant strengths] and the market range for this role in Atlanta, I was hoping we could land closer to [$X]. Is there flexibility on the base? I'm confident I'll make it a great investment for the team."},
+ {c:'Offer & negotiation',t:'Accept an offer',b:"Hi [Name] — I'm delighted to formally accept the [Role] offer at [Company]. Thank you for your confidence in me; I can't wait to get started. Please send along any paperwork or next steps, and let's confirm my start date of [date]. Thank you!"},
+ {c:'Offer & negotiation',t:'Decline gracefully (door open)',b:"Hi [Name] — thank you so much for the offer and for the time your team invested in me. After careful thought, I've decided to pursue a different opportunity that's a closer fit for me right now. I have real respect for [Company] and hope our paths cross again down the road. Wishing you and the team the very best."},
+ {c:'Thank-yous & wrap-up',t:'Thank-you after an introduction',b:"Thank you so much for connecting me with [Person], [Name] — it means a lot. I'll follow up with them today and keep you posted on how it goes. Let me know if there's ever a way I can return the favor."},
+ {c:'Thank-yous & wrap-up',t:'Keep a connector posted',b:"Hi [Name] — quick update: the intro to [Person] led to [a call / an interview / a great conversation]. Thank you again for opening that door — I really appreciate you. I'll keep you posted as it unfolds."},
+ {c:'Thank-yous & wrap-up',t:'Thank a reference',b:"Hi [Name] — thank you for being a reference for me; it means more than you know. [Company] may reach out about the [Role]. In short, what I'm hoping to convey is [one line]. I'm grateful for your support and will let you know how it goes."},
+ {c:'Thank-yous & wrap-up',t:'Resignation / notice to current employer',b:"Hi [Name],\n\nI wanted to let you know, with gratitude, that I've accepted a new role and my last day will be [date]. Thank you for the opportunity to grow at [Company] — I've learned a great deal here and care about a smooth handoff. I'm glad to help train, document, and wrap up projects however is most useful over these final two weeks.\n\nWith appreciation,\nJordan"},
+];
+const DAY=864e5, RKEY='jm_resume_v2', KEY='jm_state_v3';
+let S={roles:{},profile:{},network:{},contacts:[],intros:[],goal:null,resumeText:'',start:null};
+let RES=null;
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+let saveT;
+function flagSaved(){const s=$('#saved');s.classList.add('show');clearTimeout(window._st);window._st=setTimeout(()=>s.classList.remove('show'),1200);}
+const HAS_CS=!!(window.storage&&window.storage.get);
+const store={
+ async get(k){if(HAS_CS)return await window.storage.get(k,false);const v=window.localStorage.getItem(k);return v!=null?{value:v}:null;},
+ async set(k,v){if(HAS_CS)return await window.storage.set(k,v,false);window.localStorage.setItem(k,v);return {value:v};},
+ async del(k){if(HAS_CS)return await window.storage.delete(k,false);window.localStorage.removeItem(k);return {deleted:true};}
+};
+async function save(){clearTimeout(saveT);saveT=setTimeout(async()=>{try{await store.set(KEY,JSON.stringify(S));flagSaved();}catch(e){console.warn('save fail',e);}},250);}
+async function load(){try{const r=await store.get(KEY);if(r&&r.value)S=Object.assign(S,JSON.parse(r.value));}catch(e){}
+ if(!S.start)S.start=Date.now();
+ if(!S.contacts)S.contacts=[]; if(!S.intros)S.intros=[];
+ if(!S.goal)S.goal={title:'Land a $70–90k role in Atlanta',hire:'',leave:'',apps:20};
+ try{const r=await store.get(RKEY);if(r&&r.value)RES=JSON.parse(r.value);}catch(e){}}
+async function saveRes(){try{if(RES)await store.set(RKEY,JSON.stringify(RES));else await store.del(RKEY);flagSaved();}catch(e){alert('Could not save the file (it may be too large). Try a PDF under 4MB.');}}
+function rState(id){return S.roles[id]||(S.roles[id]={status:'Not started',applied:'',notes:''});}
+function daysSince(d){if(!d)return null;return Math.floor((Date.now()-new Date(d+'T00:00').getTime())/DAY);}
+function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d+'T00:00').getTime()-Date.now())/DAY);}
+
+function stats(){
+ const sx={'Researching':2,'Applied':10,'Screening':20,'Interview':40,'Offer':80,'Closed':5};
+ let xp=0,apps=0,ints=0,offs=0;
+ ROLES.forEach(r=>{const st=rState(r.id).status;xp+=sx[st]||0;
+  if(['Applied','Screening','Interview','Offer'].includes(st))apps++;
+  if(['Interview','Offer'].includes(st))ints++; if(st==='Offer')offs++;});
+ const pf=Object.values(S.profile).filter(Boolean).length;xp+=pf*5;
+ let warm=(S.contacts.length+S.intros.length)>0;
+ S.contacts.forEach(c=>{xp+=3;xp+={'Reached out':3,'In conversation':6,'Intro requested':5,'Intro made':10,'Referred me':15,'Ongoing':8}[c.stage]||0;});
+ let doorOpened=0;
+ S.intros.forEach(i=>{xp+=5;if(['Led to interview','Led to offer'].includes(i.status)){xp+=20;doorOpened++;}});
+ if(RES)xp+=15;
+ const level=Math.floor(xp/100)+1;
+ const badges=[
+  {l:'📄 Resume ready',on:!!RES},{l:'🚀 Off the blocks',on:apps>=1},{l:'🔁 On a roll (5)',on:apps>=5},
+  {l:'🔟 Double digits',on:apps>=10},{l:'🌐 Networker (5)',on:S.contacts.length>=5},{l:'🔗 Connector',on:S.intros.length>=1},
+  {l:'🚪 Door opened',on:doorOpened>=1},{l:'🎤 In the room',on:ints>=1},
+  {l:'✨ Polished',on:pf>=PROFILE.length},{l:'🏁 Closer',on:offs>=1}];
+ const hire=S.goal.hire||new Date(S.start+30*DAY).toISOString().slice(0,10);
+ const total=Math.max(1,Math.round((new Date(hire+'T00:00').getTime()-S.start)/DAY));
+ const elapsed=Math.round((Date.now()-S.start)/DAY);
+ return {xp,level,apps,ints,offs,badges,daysToHire:daysUntil(hire),runway:daysUntil(S.goal.leave),ringFrac:Math.min(1,Math.max(0,elapsed/total))};
+}
+function renderStats(){const s=stats();
+ $('#kApplied').textContent=s.apps;$('#kInt').textContent=s.ints;$('#kOffer').textContent=s.offs;
+ $('#lvlPill').textContent='Lv '+s.level+' · '+(LV[Math.min(s.level-1,LV.length-1)]);
+ const into=s.xp%100;$('#xpFill').style.width=into+'%';$('#xpText').textContent=s.xp+' XP · '+(100-into)+' to next level';
+ const b=$('#badges');b.innerHTML='';s.badges.forEach(x=>{const d=el('span','bdg'+(x.on?' on':''),x.l);b.appendChild(d);});
+ $('#runway').textContent=s.runway!=null?('Runway: '+s.runway+' days left at current job'):'';
+ $('#dayNum').textContent=s.daysToHire!=null?s.daysToHire:'—';$('#ringLab').textContent='days to hire-by';
+ const C=150.8;$('#ringArc').style.strokeDashoffset=C-s.ringFrac*C;
+ $('#tDays').textContent=s.daysToHire!=null?s.daysToHire:'—';$('#tRun').textContent=s.runway!=null?s.runway:'—';
+ $('#tApps').textContent=s.apps;$('#tInt').textContent=s.ints;
+ const goal=S.goal.apps||20;const pct=Math.min(100,Math.round(s.apps/goal*100));
+ $('#goalLabel').textContent=S.goal.title||'Land a role';$('#appPct').textContent=s.apps+' / '+goal+' applications';$('#appFill').style.width=pct+'%';
+}
+function renderScripture(){const i=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/DAY)%SCRIPTURE.length;
+ const[v,ref,enc]=SCRIPTURE[i];
+ $('#scripture').innerHTML=`<div class="lab">Today's word</div><div class="verse">"${v}"</div><div class="ref">${ref}</div><div class="enc">${enc}</div>`;}
+
+function renderRoles(){
+ const q=$('#q').value.toLowerCase(),fl=$('#fLane').value,fs=$('#fStatus').value,fv=$('#fVer').value,p1=$('#p1only').checked,sort=$('#sort').value;
+ let list=ROLES.filter(r=>{const st=rState(r.id).status;
+   if(q&&!(r.co+' '+r.role).toLowerCase().includes(q))return false;
+   if(fl&&r.lane!==fl)return false;if(fs&&st!==fs)return false;if(fv&&r.ver!==fv)return false;if(p1&&r.pri!==1)return false;return true;});
+ list.sort((a,b)=> sort==='fit'?b.fit-a.fit : sort==='pri'?a.pri-b.pri : a.co.localeCompare(b.co));
+ const box=$('#roleList');box.innerHTML='';
+ list.forEach(r=>{const s=rState(r.id);const done=s.status==='Offer'||s.status==='Closed';const c=el('div','role'+(done?' done':''));
+   const dots=[1,2,3,4,5].map(n=>`<span class="dot${n<=r.fit?' f':''}"></span>`).join('');
+   const verChip=r.ver==='verified'?'<span class="chip ver">● Live</span>':'<span class="chip tgt">○ Active hirer</span>';
+   const ds=daysSince(s.applied);let flag='';
+   if(s.status==='Applied'&&ds!=null&&ds>=5)flag=`<div class="flag">⏰ ${ds} days since applied — time to follow up</div>`;
+   else if(s.status==='Interview')flag=`<div class="flag ok">★ Interview — prep company + STAR stories (see Playbook)</div>`;
+   else if(s.status==='Offer')flag=`<div class="flag ok">✓ Offer — run it through the evaluator on Negotiate</div>`;
+   const apply=r.link?`<a class="applybtn" href="${r.link}" target="_blank" rel="noopener">Apply ↗</a>`:r.email?`<a class="applybtn" href="mailto:${r.email}">Email résumé ↗</a>`:`<span class="applybtn ghost">Find on LinkedIn</span>`;
+   c.innerHTML=`<div class="top"><div style="flex:1"><div class="co">${r.co}</div><div class="rl">${r.role}</div></div><div class="fitdots" title="Fit ${r.fit}/5">${dots}</div></div>
+     <div class="meta"><span class="chip lane" style="background:${LANES[r.lane].c}">${LANES[r.lane].lbl}</span>${verChip}<span class="chip">${r.loc}</span><span class="comp"><b>${r.base}</b>${r.ote&&r.ote!==r.base?' · '+r.ote:''}</span></div>
+     <div class="chk">${r.ver==='verified'?'✓ ':''}${r.chk}</div><div class="rc">${r.rc}</div>
+     <div class="row2"><select data-r="${r.id}" class="st">${STATUSES.map(o=>`<option${o===s.status?' selected':''}>${o}</option>`).join('')}</select>
+       <input type="date" class="date" data-rd="${r.id}" value="${s.applied}" title="Date applied" aria-label="Date applied">${apply}</div>${flag}
+     <textarea class="notes" data-rn="${r.id}" placeholder="Notes — contact, follow-up date, interview thoughts…">${s.notes||''}</textarea>`;
+   box.appendChild(c);});
+ $('#count').textContent=`${list.length} of ${ROLES.length} shown`;
+ renderDoNow();renderFunnel();renderLanes();renderStats();
+}
+function renderDoNow(){const box=$('#doNow');box.innerHTML='';const items=[];
+ ROLES.forEach(r=>{const s=rState(r.id);const ds=daysSince(s.applied);
+   if(r.id==='locum'&&s.status==='Not started')items.push({tag:'Warm',cls:'t-warm',t:'Message your old LocumTenens manager',s:'Re-connect before applying — highest-probability play',o:0});
+   else if(s.status==='Not started'&&r.pri===1)items.push({tag:'Apply',cls:'t-apply',t:`Apply: ${r.co}`,s:r.role,o:1});
+   if(s.status==='Applied'&&ds!=null&&ds>=5)items.push({tag:'Follow up',cls:'t-follow',t:`Follow up: ${r.co}`,s:`${ds} days since applied`,o:0});
+   if(s.status==='Interview')items.push({tag:'Prep',cls:'t-prep',t:`Prep interview: ${r.co}`,s:'Research + STAR stories',o:0});});
+ (S.contacts||[]).forEach(c=>{if(c.next&&daysUntil(c.next)<=0&&!['Referred me','Ongoing','Dormant'].includes(c.stage))items.push({tag:'Follow up',cls:'t-warm',t:`Reach out: ${c.name||'contact'}`,s:c.want||c.company||'Relationship follow-up',o:0});});
+ items.sort((a,b)=>a.o-b.o);
+ if(!items.length){box.innerHTML='<div class="empty">All caught up. Advance a status to surface the next move.</div>';return;}
+ items.slice(0,8).forEach(i=>{const d=el('div','todo');d.innerHTML=`<span class="tag ${i.cls}">${i.tag}</span><div>${i.t}<small>${i.s}</small></div>`;box.appendChild(d);});}
+function renderFunnel(){const box=$('#funnel');box.innerHTML='';const reached=s=>ROLES.filter(r=>{const st=rState(r.id).status;return STAGES.indexOf(st)>=STAGES.indexOf(s);}).length;const max=ROLES.length;
+ STAGES.forEach(st=>{const n=reached(st);const w=Math.max(8,(n/max)*100);const row=el('div','stage');row.innerHTML=`<span class="nm">${st}</span><div class="bar" style="width:${w}%">${n}</div>`;box.appendChild(row);});}
+function renderLanes(){const box=$('#laneBreak');box.innerHTML='';const max=ROLES.length;
+ Object.keys(LANES).forEach(k=>{const n=ROLES.filter(r=>r.lane===k).length;const w=Math.max(6,(n/max)*100);const row=el('div','lanebar');
+   row.innerHTML=`<span class="t">${LANES[k].lbl}</span><span class="b" style="width:${w}%;background:${LANES[k].c}"></span><span style="font-family:var(--mono);color:var(--grey)">${n}</span>`;box.appendChild(row);});}
+function renderProfile(){const box=$('#checklist');box.innerHTML='';let done=0;
+ PROFILE.forEach(p=>{const on=!!S.profile[p.id];if(on)done++;const d=el('label','check'+(on?' done':''));d.innerHTML=`<input type="checkbox" data-pf="${p.id}"${on?' checked':''}><span class="ct">${p.t}</span>`;box.appendChild(d);});
+ $('#pfProg').style.width=Math.round(done/PROFILE.length*100)+'%';}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function uid(){return 'c'+Math.random().toString(36).slice(2,9);}
+function opts(arr,sel){return arr.map(o=>{const v=Array.isArray(o)?o[0]:o,l=Array.isArray(o)?o[1]:o;return `<option value="${v}"${String(v)===String(sel)?' selected':''}>${l}</option>`;}).join('');}
+function renderNetwork(){renderCrmStats();renderContacts();renderIntros();}
+function renderCrmStats(){const c=S.contacts,i=S.intros;
+ const conv=c.filter(x=>['In conversation','Intro requested','Intro made','Referred me','Ongoing'].includes(x.stage)).length;
+ const win=i.filter(x=>['Led to interview','Led to offer'].includes(x.status)).length;
+ const t=[[c.length,'contacts'],[conv,'active conversations'],[i.length,'intros logged'],[win,'intros → interview/offer']];
+ $('#crmStats').innerHTML=t.map(x=>`<div class="cst"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');}
+function renderContacts(){
+ const q=($('#cq').value||'').toLowerCase(),fs=$('#cfStage').value;
+ let list=S.contacts.filter(c=>{if(q&&!((c.name+' '+c.company+' '+c.how).toLowerCase().includes(q)))return false;if(fs&&c.stage!==fs)return false;return true;});
+ const box=$('#contactList');box.innerHTML='';
+ if(!S.contacts.length){box.innerHTML='<div class="box empty2"><b>No contacts yet.</b> Start with your warmest connection — your old manager at LocumTenens — then add anyone who can open a door. Linking a contact to a target company helps you see which doors still need a connector.</div>';}
+ else if(!list.length){box.innerHTML='<div class="empty">No contacts match that filter.</div>';}
+ const warmIcon={3:'🔥',2:'☀️',1:'❄️'};
+ list.forEach(c=>{const overdue=c.next&&daysUntil(c.next)<0&&!['Referred me','Ongoing','Dormant'].includes(c.stage);
+   const linkedCo=c.link?(ROLES.find(r=>r.id===c.link)||{}).co:'';
+   const meta=[ [c.title,c.company].filter(Boolean).join(' @ '), c.how, linkedCo?'🎯 '+linkedCo:'' ].filter(Boolean).join(' · ');
+   const card=el('div','ccard');
+   card.innerHTML=`<div class="chead"><div class="cn">${warmIcon[c.warm]||''} ${esc(c.name)||'(no name)'}</div><button class="del" data-del="contact" data-id="${c.id}" title="Delete">×</button></div>
+     <div class="cmeta">${esc(meta)||'—'}</div>
+     <div class="crow">
+       <label>Stage<select data-ci="${c.id}" data-cf="stage">${opts(CSTAGES,c.stage)}</select></label>
+       <label>Warmth<select data-ci="${c.id}" data-cf="warm">${opts(WARMOPT,c.warm)}</select></label>
+       <label>Last touch<input type="date" data-ci="${c.id}" data-cf="last" value="${c.last||''}"></label>
+       <label>Next follow-up<input type="date" data-ci="${c.id}" data-cf="next" value="${c.next||''}"></label>
+     </div>
+     ${overdue?'<div class="flag">⏰ Follow-up overdue</div>':''}
+     <input class="cinp" data-ci="${c.id}" data-cf="contact" placeholder="Email / phone / LinkedIn" value="${esc(c.contact)}">
+     <input class="cinp" data-ci="${c.id}" data-cf="want" placeholder="What you want (intro to X, advice, a referral…)" value="${esc(c.want)}">
+     <textarea class="notes" data-ci="${c.id}" data-cf="notes" placeholder="Notes — context, last conversation, next step…">${esc(c.notes)}</textarea>`;
+   box.appendChild(card);});
+ $('#cCount').textContent=`${S.contacts.length} contact${S.contacts.length===1?'':'s'}`;
+ renderNeedConn();}
+function renderNeedConn(){const linked=new Set(S.contacts.map(c=>c.link).filter(Boolean));
+ const need=ROLES.filter(r=>r.pri===1&&!linked.has(r.id));
+ $('#needConn').innerHTML = need.length
+   ? `<h3 style="margin:0 0 6px">Top targets still needing a connector</h3><p style="font-size:12.5px;color:var(--grey);margin:0">Find someone who can introduce you here, then add them as a contact and link them.</p><div class="needlist">${need.map(r=>`<span class="chip">${r.co}</span>`).join('')}</div>`
+   : '<h3 style="margin:0">Nice — every top target has a connector linked. 🎯</h3>';}
+function renderIntros(){const box=$('#introList');box.innerHTML='';
+ if(!S.intros.length){box.innerHTML='<div class="box empty2"><b>No introductions logged yet.</b> Whenever someone connects you to a person or company, log it here so you can track exactly what each intro turns into.</div>';return;}
+ S.intros.forEach(i=>{const win=['Led to interview','Led to offer'].includes(i.status);const card=el('div','icard'+(win?' win':''));
+   card.innerHTML=`<div class="chead"><div class="cn">${esc(i.from)} → ${esc(i.to)}</div><button class="del" data-del="intro" data-id="${i.id}" title="Delete">×</button></div>
+     <div class="cmeta">${i.date||'no date'} · ${esc(i.channel)}</div>
+     <div class="crow"><label>Status<select data-ii="${i.id}" data-if="status">${opts(ISTAT,i.status)}</select></label></div>
+     <input class="cinp" data-ii="${i.id}" data-if="notes" placeholder="Notes / context" value="${esc(i.notes)}">`;
+   box.appendChild(card);});}
+function addContact(){const name=$('#cName').value.trim();if(!name){$('#cName').focus();return;}
+ S.contacts.unshift({id:uid(),name,company:$('#cCompany').value.trim(),title:$('#cTitle').value.trim(),how:$('#cHow').value.trim(),contact:$('#cContact').value.trim(),warm:$('#cWarm').value,stage:$('#cStage').value,link:$('#cLink').value,last:'',next:'',want:'',notes:''});
+ ['cName','cCompany','cTitle','cHow','cContact'].forEach(id=>$('#'+id).value='');
+ save();renderNetwork();renderStats();}
+function addIntro(){const from=$('#iFrom').value.trim(),to=$('#iTo').value.trim();if(!from){$('#iFrom').focus();return;}if(!to){$('#iTo').focus();return;}
+ S.intros.unshift({id:uid(),from,to,date:$('#iDate').value,channel:$('#iChannel').value,status:$('#iStatus').value,notes:$('#iNotes').value.trim()});
+ ['iFrom','iTo','iNotes'].forEach(id=>$('#'+id).value='');$('#iDate').value='';
+ save();renderIntros();renderCrmStats();renderStats();}
+function switchNView(v){document.querySelectorAll('.segb').forEach(b=>b.setAttribute('aria-selected',b.dataset.nv===v));document.querySelectorAll('.nview').forEach(p=>p.classList.toggle('on',p.id==='nv-'+v));}
+function renderTemplates(){const cat=$('#tmplCat').value;const box=$('#tmplList');box.innerHTML='';let shown=0;
+ TCATS.forEach(c=>{if(cat&&cat!==c)return;
+  const inCat=TEMPLATES.map((x,idx)=>({x,idx})).filter(o=>o.x.c===c);if(!inCat.length)return;
+  const head=el('h3',null,c);head.style.cssText='font-family:var(--disp);font-weight:600;font-size:14px;letter-spacing:.02em;margin:18px 0 8px;color:var(--ink2)';box.appendChild(head);
+  inCat.forEach(o=>{shown++;const d=el('div','tmpl');d.innerHTML=`<h4>${esc(o.x.t)}<button class="tcp" data-ti="${o.idx}">Copy</button></h4><div class="body">${esc(o.x.b)}</div>`;box.appendChild(d);});});
+ $('#tmplCount').textContent=shown+' template'+(shown===1?'':'s');}
+function renderBands(){const box=$('#bands');box.innerHTML='';const sel=$('#cLane');sel.innerHTML='';
+ Object.entries(BANDS).forEach(([k,v])=>{const b=el('div','band');b.innerHTML=`<div class="nm" style="color:${LANES[k].c}">${LANES[k].lbl}</div><div class="scale"></div><div class="nums"><span>$${v[0]}k</span><span>mid $${v[1]}k</span><span>$${v[2]}k</span></div>`;box.appendChild(b);const o=el('option',null,LANES[k].lbl);o.value=k;sel.appendChild(o);});}
+function evalOffer(){const k=$('#cLane').value,comp=parseFloat($('#cComp').value),v=$('#verdict');if(!comp){v.style.display='none';return;}const[lo,mid,hi]=BANDS[k];v.style.display='block';
+ if(comp<lo){v.className='verdict v-low';v.innerHTML=`<b>Below market.</b> $${comp}k is under the $${lo}k floor for ${LANES[k].lbl}. Counter to at least $${mid}k.`;}
+ else if(comp<mid){v.className='verdict v-fair';v.innerHTML=`<b>Fair, with room.</b> $${comp}k is lower-half. Midpoint is $${mid}k — counter toward it and cite the range.`;}
+ else if(comp<=hi){v.className='verdict v-strong';v.innerHTML=`<b>Strong.</b> $${comp}k is upper-half (top ~$${hi}k). Push for the round number above and lock a 6-month review.`;}
+ else{v.className='verdict v-strong';v.innerHTML=`<b>Above band.</b> $${comp}k beats the typical top of $${hi}k. Get it in writing.`;}}
+function renderPlaybook(){const c1=$('#pbCol1'),c2=$('#pbCol2');c1.innerHTML='';c2.innerHTML='';
+ PLAYBOOK.forEach((p,i)=>{const box=el('div','box pb');box.innerHTML=`<h4>${p.h}</h4><ul>${p.items.map(x=>`<li>${x}</li>`).join('')}</ul>`;(i%2?c2:c1).appendChild(box);});}
+function renderResume(){const empty=$('#dropEmpty'),full=$('#dropFull'),drop=$('#drop');
+ if(RES){drop.classList.add('has');empty.style.display='none';full.style.display='block';
+  const kb=Math.round(RES.size/1024);
+  full.innerHTML=`<div class="fileinfo"><div><div class="nm">📄 ${RES.name}</div><div style="font-size:12px;color:var(--grey)">${kb} KB · saved ${RES.date}</div></div>
+   <div style="display:flex;gap:8px"><a class="linkbtn" href="${RES.data}" download="${RES.name}">Download</a><button class="linkbtn" id="resRemove">Remove</button>
+   <label class="linkbtn">Replace<input type="file" id="resumeFile2" accept=".pdf,.doc,.docx" hidden></label></div></div>`;}
+ else{drop.classList.remove('has');empty.style.display='block';full.style.display='none';}
+ $('#resumeText').value=S.resumeText||'';}
+function handleFile(file){if(!file)return;if(file.size>4*1024*1024){alert('That file is over 4MB. Please upload a PDF/Word under 4MB.');return;}
+ const fr=new FileReader();fr.onload=()=>{RES={name:file.name,size:file.size,date:new Date().toLocaleDateString(),data:fr.result};saveRes();renderResume();renderStats();};fr.readAsDataURL(file);}
+
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.r){rState(t.dataset.r).status=t.value;save();renderRoles();}
+ else if(t.dataset.rd){rState(t.dataset.rd).applied=t.value;save();renderRoles();}
+ else if(t.dataset.pf){S.profile[t.dataset.pf]=t.checked;save();renderProfile();renderStats();}
+ else if(t.dataset.ci){const c=S.contacts.find(x=>x.id===t.dataset.ci);if(c){c[t.dataset.cf]=t.value;save();renderNetwork();renderStats();renderDoNow();}}
+ else if(t.dataset.ii){const i=S.intros.find(x=>x.id===t.dataset.ii);if(i){i[t.dataset.if]=t.value;save();renderIntros();renderCrmStats();renderStats();}}
+ else if(t.id==='cfStage'){renderContacts();}
+ else if(t.id==='tmplCat'){renderTemplates();}
+ else if(t.id==='cLane'){evalOffer();}
+ else if(['fLane','fStatus','fVer','sort'].includes(t.id)){renderRoles();}
+ else if(t.id==='resumeFile'||t.id==='resumeFile2'){handleFile(t.files[0]);}
+ else if(t.id==='gHire'){S.goal.hire=t.value;save();renderStats();}
+ else if(t.id==='gLeave'){S.goal.leave=t.value;save();renderStats();}
+ else if(t.id==='gApps'){S.goal.apps=parseInt(t.value)||20;save();renderStats();}});
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.rn){rState(t.dataset.rn).notes=t.value;save();}
+ else if(t.dataset.ci){const c=S.contacts.find(x=>x.id===t.dataset.ci);if(c){c[t.dataset.cf]=t.value;save();}}
+ else if(t.dataset.ii){const i=S.intros.find(x=>x.id===t.dataset.ii);if(i){i[t.dataset.if]=t.value;save();}}
+ else if(t.id==='cq'){renderContacts();}
+ else if(t.id==='q'){renderRoles();}else if(t.id==='cComp'){evalOffer();}
+ else if(t.id==='gTitle'){S.goal.title=t.value;save();renderStats();}
+ else if(t.id==='resumeText'){S.resumeText=t.value;save();}});
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.id==='resRemove'){RES=null;saveRes();renderResume();renderStats();}
+ else if(t.classList.contains('tcp')){navigator.clipboard&&navigator.clipboard.writeText(TEMPLATES[+t.dataset.ti].b);t.textContent='Copied';setTimeout(()=>t.textContent='Copy',1200);}
+ else if(t.id==='addContact'){addContact();}
+ else if(t.id==='addIntro'){addIntro();}
+ else if(t.dataset.del==='contact'){S.contacts=S.contacts.filter(c=>c.id!==t.dataset.id);save();renderNetwork();renderStats();renderDoNow();}
+ else if(t.dataset.del==='intro'){S.intros=S.intros.filter(i=>i.id!==t.dataset.id);save();renderIntros();renderCrmStats();renderStats();}
+ else if(t.dataset.nv){switchNView(t.dataset.nv);}});
+$('#p1only').addEventListener('change',renderRoles);
+['dragover','dragenter'].forEach(ev=>$('#drop').addEventListener(ev,e=>{e.preventDefault();}));
+$('#drop').addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+ document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected','false'));tab.setAttribute('aria-selected','true');
+ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));$('#'+tab.dataset.t).classList.add('on');}));
+document.querySelectorAll('.cp').forEach(b=>b.addEventListener('click',()=>{const txt=$('#'+b.dataset.copy).textContent;navigator.clipboard?.writeText(txt);b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200);}));
+$('#reset').addEventListener('click',async()=>{if(!confirm('Reset all statuses, notes, checklist, network, goals and resume?'))return;
+ S={roles:{},profile:{},network:{},contacts:[],intros:[],goal:{title:'Land a $70–90k role in Atlanta',hire:'',leave:'',apps:20},resumeText:'',start:Date.now()};RES=null;
+ try{await store.del(KEY);await store.del(RKEY);}catch(e){}save();initRender();});
+function initRender(){
+ $('#fLane').innerHTML='<option value="">All lanes</option>'+Object.keys(LANES).map(k=>`<option value="${k}">${LANES[k].lbl}</option>`).join('');
+ $('#fStatus').innerHTML='<option value="">Any status</option>'+STATUSES.map(s=>`<option>${s}</option>`).join('');
+ $('#gTitle').value=S.goal.title||'';$('#gHire').value=S.goal.hire||'';$('#gLeave').value=S.goal.leave||'';$('#gApps').value=S.goal.apps||20;
+ $('#cWarm').innerHTML=opts(WARMOPT,'2');$('#cStage').innerHTML=opts(CSTAGES,'To reach out');
+ $('#cfStage').innerHTML='<option value="">Any stage</option>'+opts(CSTAGES,'');
+ $('#cLink').innerHTML='<option value="">Link to a target… (optional)</option>'+ROLES.filter(r=>r.pri===1).map(r=>`<option value="${r.id}">🎯 ${r.co}</option>`).join('');
+ $('#iChannel').innerHTML=opts(ICHAN,'Email');$('#iStatus').innerHTML=opts(ISTAT,'Requested');
+ $('#tmplCat').innerHTML='<option value="">All categories</option>'+TCATS.map(c=>`<option value="${c}">${c}</option>`).join('');
+ renderScripture();renderRoles();renderProfile();renderNetwork();renderTemplates();renderBands();renderPlaybook();renderResume();renderStats();}
+(async function(){await load();initRender();})();
+</script>
